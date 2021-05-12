@@ -1,4 +1,4 @@
-# DEMO : # [# InstaChat #](https://insta--chat.herokuapp.com/ "InstaChat")
+# DEMO : [InstaChat #](https://insta--chat.herokuapp.com/ "InstaChat")
 
 A chat application where users can login, register, create rooms and interact between users
 
