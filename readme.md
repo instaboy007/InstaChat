@@ -1,6 +1,6 @@
 A chat application where users can login, register, create rooms and interact between users
 
-**Tools used:
+**Tools used:**
 - Python
 - Django
 - Django SMTP
@@ -11,4 +11,4 @@ A chat application where users can login, register, create rooms and interact be
 - CSS
 - JavaScript
 - jQuery
-- SQLite3**
+- SQLite3
