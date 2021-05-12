@@ -1,3 +1,5 @@
+**DEMO :<https://insta--chat.herokuapp.com/>**
+
 A chat application where users can login, register, create rooms and interact between users
 
 **Tools used:**
