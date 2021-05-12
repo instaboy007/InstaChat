@@ -1,0 +1,116 @@
+{% extends 'chat/Base.html' %}
+{% block content %}
+<div class="container">
+    <div class="messaging">
+        <div class="inbox_msg">
+            <div class="inbox_people">
+                <div class="headind_srch">
+                    <div class="recent_heading">
+                        <h1 style="font-family:'Billabong', sans-serif;color: black;">InstaChat</h1>
+                    </div>
+                </div>
+                <div class="inbox_chat">
+					<div id="accordion">
+                        <div class="card">
+                            <div class="card-header chat_list">
+                                <a class="card-link" data-toggle="collapse" href="#collapseOne">
+                                    <i class="fas fa-plus"></i> Create Group
+                                </a>
+                            </div>
+                            <div id="collapseOne" class="collapse" data-parent="#accordion" style="padding:1em;">
+								<input type="text" style="display:block;margin:auto;" id="groupname">
+								<input type="button" class="fourth" style="display:block;margin:1em auto 0;width:85%;" id="create-group" value="CREATE">
+							</div>
+                        </div>
+						<script>
+							$("#create-group").click(function()
+							{
+								location.href="/chat/"+$("#groupname").val()+"/?name="+$("#groupname").val()+'&user={{user}}';
+								chat_list='<a href="/chat/'+$("#groupname").val()+'/?name='+$("#groupname").val()+'&user={user}"><div class="chat_list active_chat"><div class="chat_people"><div class="chat_img"> <img src="https://iconape.com/wp-content/png_logo_vector/android-messages.png" alt="sunil"> </div><div class="chat_ib"><h5>'+$("#groupname").val()+'</h5></div></div></div></a>'
+								chatSocket.send(JSON.stringify(
+								{
+									'message': chat_list
+								}));
+							});
+						</script>
+                        <div class="card">
+                            <div class="card-header chat_list">
+                                <a class="card-link" data-toggle="collapse" href="#collapseTwo">
+                                    <i class="fas fa-sign-in-alt"></i> Join Group
+                                </a>
+                            </div>
+                            <div id="collapseTwo" class="collapse show" data-parent="#accordion">
+								
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="FriendStatus">
+                <div class="FriendProfile"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
+                <div class="FriendName">
+                    <h1>{{ name }}</h1>
+                </div>
+            </div>
+            <div class="mesgs">
+                <div class="msg_history">
+                </div>
+                <div class="type_msg">
+                    <div class="input_msg_write">
+                        <input type="text" id="chat-message-input" class="write_msg" placeholder="Type a message" />
+                        <button class="msg_send_btn" id="chat-message-submit" type="button">
+							<i class="fas fa-paper-plane" aria-hidden="true"></i>
+						</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ room_name|json_script:"room-name" }}
+    <script>
+		const roomName = JSON.parse(document.getElementById('room-name').textContent);
+        const chatSocket = new WebSocket('ws://'+ window.location.host+ '/ws/chat/'+ roomName+ '/');
+		flag=false;
+        chatSocket.onmessage = function(e) 
+		{
+			const data = JSON.parse(e.data);
+			if(flag==false && data.message.includes("incoming_msg") && !data.message.includes("chat_list"))
+				$(".msg_history").append(data.message);
+			else if(data.message.includes("chat_list"))
+				$("#collapseTwo").append(data.message.replace("{user}", "{{user}}"));
+			flag=false;
+        };
+
+        chatSocket.onclose = function(e) 
+		{
+            console.error('Chat socket closed unexpectedly');
+        };
+
+        $('#chat-message-input').focus();
+        $('#chat-message-input').keyup(function(e) 
+		{
+            if (e.keyCode === 13) 
+			{
+                $('#chat-message-submit').click();
+            }
+        });
+        $('#chat-message-submit').click(function(e) 
+		{
+			if($('#chat-message-input').val().length>0)
+			{
+				var d = new Date();
+				var months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
+				var string='<div class="outgoing_msg"><div class="sent_msg"><p>'+$('#chat-message-input').val()+'</p><span class="time_date">'+d.getHours()+':'+d.getMinutes()+' | '+months[d.getMonth()+1]+' '+d.getDate()+'</span></div></div>';
+				$(".msg_history").append(string);
+				var string='<div class="incoming_msg"><div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div><div class="received_msg"><div class="received_withd_msg"><p>'+$('#chat-message-input').val()+'</p><span class="time_date">'+d.getHours()+':'+d.getMinutes()+' | '+months[d.getMonth()+1]+' '+d.getDate()+' | <b>{{user}}</b></span></div></div></div>';
+				flag=true;
+				chatSocket.send(JSON.stringify(
+				{
+					'message': string
+				}));
+				$('#chat-message-input').val('');
+			}
+        });
+    </script>
+</div>
+{% endblock content %}

@@ -1,0 +1,36 @@
+{% extends 'Login/Base.html' %}
+{% block content %}
+<div class="wrapper fadeInDown">
+    <div id="formContent">
+        <!-- Tabs Titles -->
+  
+        <!-- Icon -->
+        <div class="fadeIn first">
+            <h1 style="font-family: 'Billabong', sans-serif;margin-top:15px;">InstaChat</h1>
+        </div>
+  
+        <!-- Login Form -->
+        <form>
+            <div class="row d-flex justify-content-center">
+                <div>
+                    <div class="circle image-fluid">
+                        <!-- User Profile Image -->
+                        <img class="profile-pic image-fluid" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png">
+                        <!-- Default Image -->
+                        <!-- <i class="fa fa-user fa-5x"></i> -->
+                    </div>
+                    <div class="p-image">
+                        <i class="fa fa-camera upload-button"></i>
+                        <input class="file-upload" type="file" accept="image/*"/>
+                    </div>
+               </div>
+            </div>
+            <a href="/"><input  type="button" class="fadeIn fourth" value="Continue"></a>
+        </form>
+        <!-- Remind Passowrd -->
+        <div id="formFooter">
+            <a class="underlineHover" href="/SignUp">Back</a>
+        </div>
+    </div>
+</div>
+{% endblock content %}
